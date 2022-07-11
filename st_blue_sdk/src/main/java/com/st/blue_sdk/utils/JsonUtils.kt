@@ -1,0 +1,46 @@
+/*
+ * Copyright (c) 2022(-0001) STMicroelectronics.
+ * All rights reserved.
+ * This software is licensed under terms that can be found in the LICENSE file in
+ * the root directory of this software component.
+ * If no LICENSE file comes with this software, it is provided AS-IS.
+ */
+package com.st.blue_sdk.utils
+
+import kotlinx.serialization.json.*
+
+fun List<*>.toJsonElement(): JsonElement {
+    val list: MutableList<JsonElement> = mutableListOf()
+    this.forEach { value ->
+        when (value) {
+            null -> list.add(JsonNull)
+            is Map<*, *> -> list.add(value.toJsonElement())
+            is List<*> -> list.add(value.toJsonElement())
+            is Boolean -> list.add(JsonPrimitive(value))
+            is Number -> list.add(JsonPrimitive(value))
+            is String -> list.add(JsonPrimitive(value))
+            is Enum<*> -> list.add(JsonPrimitive(value.toString()))
+            else -> throw IllegalStateException("Can't serialize unknown collection type: $value")
+        }
+    }
+    return JsonArray(list)
+}
+
+fun Map<*, *>.toJsonElement(): JsonElement {
+    val map: MutableMap<String, JsonElement> = mutableMapOf()
+    this.forEach { (key, value) ->
+        key as String
+        when (value) {
+            null -> map[key] = JsonNull
+            is Map<*, *> -> map[key] = value.toJsonElement()
+            is List<*> -> map[key] = value.toJsonElement()
+            is Boolean -> map[key] = JsonPrimitive(value)
+            is Number -> map[key] = JsonPrimitive(value)
+            is String -> map[key] = JsonPrimitive(value)
+            is Enum<*> -> map[key] = JsonPrimitive(value.toString())
+            else -> throw IllegalStateException("Can't serialize unknown type: $value")
+        }
+    }
+
+    return JsonObject(map)
+}
