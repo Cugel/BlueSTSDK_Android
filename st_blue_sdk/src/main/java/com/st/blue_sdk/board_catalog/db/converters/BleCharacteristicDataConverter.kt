@@ -15,8 +15,8 @@ import kotlinx.serialization.json.Json
 
 class BleCharacteristicDataConverter {
     @TypeConverter
-    fun fromBleCharacteristic(value: List<BleCharacteristic>?): String {
-        if (value == null) return ""
+    fun fromBleCharacteristic(value: List<BleCharacteristic>): String {
+        if (value.isEmpty()) return ""
         return Json.encodeToString(value)
     }
 

@@ -15,8 +15,8 @@ import kotlinx.serialization.json.Json
 
 class CloudAppDataConverter {
     @TypeConverter
-    fun fromCloudApp(value: List<CloudApp>?): String {
-        if (value == null) return ""
+    fun fromCloudApp(value: List<CloudApp>): String {
+        if (value.isEmpty()) return ""
         return Json.encodeToString(value)
     }
 

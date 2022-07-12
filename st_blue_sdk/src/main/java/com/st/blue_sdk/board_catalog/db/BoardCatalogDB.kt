@@ -12,6 +12,7 @@ import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
 import com.st.blue_sdk.board_catalog.db.converters.BleCharacteristicDataConverter
 import com.st.blue_sdk.board_catalog.db.converters.CloudAppDataConverter
+import com.st.blue_sdk.board_catalog.db.converters.FotaDetailsConverter
 import com.st.blue_sdk.board_catalog.db.converters.OptionByteDataConverter
 import com.st.blue_sdk.board_catalog.models.BoardFirmware
 
@@ -25,7 +26,8 @@ import com.st.blue_sdk.board_catalog.models.BoardFirmware
 @TypeConverters(
     BleCharacteristicDataConverter::class,
     OptionByteDataConverter::class,
-    CloudAppDataConverter::class
+    CloudAppDataConverter::class,
+    FotaDetailsConverter::class
 )
 abstract class BoardCatalogDB : RoomDatabase() {
     abstract fun boardCatalogDao(): BoardCatalogDao

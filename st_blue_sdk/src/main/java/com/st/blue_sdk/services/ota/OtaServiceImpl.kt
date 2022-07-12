@@ -119,18 +119,28 @@ class OtaServiceImpl @Inject constructor(
             }
 
             //Fast Fota is Enabled only for BlueST-SDK V2 board type
-            val hasFastFota = boardFirmware?.fota == BoardFotaType.FAST
-            val fotaMaxChunkSize = boardFirmware?.fotaMaxChunkSize
-            val fotaChunkDivisorConstraint = boardFirmware?.fotaChunkDivisorConstraint
+            val hasFastFota = boardFirmware?.fota?.type == BoardFotaType.FAST
+            val fotaMaxChunkSize = boardFirmware?.fota?.max_chunk_length
+            val fotaChunkDivisorConstraint = boardFirmware?.fota?.max_divisor_constraint
 
             return when (boardModel) {
                 Boards.Model.SENSOR_TILE_BOX -> {
-                    if (stBoxHasNewFwUpgradeProtocol(getFwVersion(nodeId))) {
-                        //"Special" Fota for SensorTile.box official Fw
-                        DebugFwUpgradeWithResume(coroutineScope, nodeService.debugService)
+                    if(boardFirmware!=null) {
+                        if (stBoxHasNewFwUpgradeProtocol(getFwVersion(nodeId))) {
+                            //"Special" Fota for SensorTile.box official Fw
+                            DebugFwUpgradeWithResume(coroutineScope, nodeService.debugService)
+                        } else {
+                            //Normal Fota never Fast Fota
+                            DebugFwUpgrade(coroutineScope, nodeService.debugService)
+                        }
                     } else {
-                        //Normal Fota never Fast Fota
-                        DebugFwUpgrade(coroutineScope, nodeService.debugService)
+                        DebugFwUpgrade(
+                            coroutineScope,
+                            nodeService.debugService,
+                            hasFastFota,
+                            fotaMaxChunkSize,
+                            fotaChunkDivisorConstraint
+                        )
                     }
                 }
                 else -> DebugFwUpgrade(

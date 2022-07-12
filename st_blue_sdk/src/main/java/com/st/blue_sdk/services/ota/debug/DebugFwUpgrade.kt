@@ -133,15 +133,19 @@ open class DebugFwUpgrade(
 
                 //Check if we have one constraint on Max Length
                 if (fotaMaxChunkSize != null) {
-                    if (fotaMaxChunkSize in 1 until maxChuckSize) {
-                        maxChuckSize = fotaMaxChunkSize
+                    if(fotaMaxChunkSize!=0) {
+                        if (fotaMaxChunkSize in 1 until maxChuckSize) {
+                            maxChuckSize = fotaMaxChunkSize
+                        }
                     }
                 }
 
                 //Check if we have also a further constraint
                 if (fotaChunkDivisorConstraint != null) {
-                    maxChuckSize =
-                        (maxChuckSize / fotaChunkDivisorConstraint) * fotaChunkDivisorConstraint
+                    if (fotaChunkDivisorConstraint != 0) {
+                        maxChuckSize =
+                            (maxChuckSize / fotaChunkDivisorConstraint) * fotaChunkDivisorConstraint
+                    }
                 }
                 maxChuckSize
             } else DEFAULT_MAX_PAYLOAD_SIZE

@@ -30,13 +30,11 @@ android {
     buildTypes {
         debug {
             buildConfigField "String", "DB_BASE_URL", "\"https://s3.amazonaws.com/st_test/STBLESensor/\""
-            //buildConfigField "String", "BLUESTSDK_DB_BASE_URL", "\"https://raw.githubusercontent.com/STMicroelectronics/appconfig/main/bluestsdkv2/\""
-            buildConfigField "String", "BLUESTSDK_DB_BASE_URL",  "\"https://raw.githubusercontent.com/STMicroelectronics/appconfig/4.15.0/bluestsdkv2/\""
+            buildConfigField "String", "BLUESTSDK_DB_BASE_URL", "\"https://raw.githubusercontent.com/STMicroelectronics/appconfig/4.16.0/bluestsdkv2/\""
         }
         release {
             buildConfigField "String", "DB_BASE_URL", "\"https://s3.amazonaws.com/st_test/STBLESensor/\""
-            //buildConfigField "String", "BLUESTSDK_DB_BASE_URL", "\"https://raw.githubusercontent.com/STMicroelectronics/appconfig/main/bluestsdkv2/\""
-            buildConfigField "String", "BLUESTSDK_DB_BASE_URL",  "\"https://raw.githubusercontent.com/STMicroelectronics/appconfig/4.15.0/bluestsdkv2/\""
+            buildConfigField "String", "BLUESTSDK_DB_BASE_URL", "\"https://raw.githubusercontent.com/STMicroelectronics/appconfig/4.16.0/bluestsdkv2/\""
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }

@@ -181,7 +181,7 @@ class GattBridgeFlow : BluetoothGattCallback(), GattBridge {
 
     override fun onMtuChanged(gatt: BluetoothGatt?, mtu: Int, status: Int) {
         if (status == BluetoothGatt.GATT_SUCCESS) {
-            Log.d(TAG, "Mtu changed with value: $mtu")
+            Log.d(TAG, "mtu changed with value: $mtu")
             bleEventsFlow.tryEmit(BleEvent.MtuChanged(mtu))
         }
     }

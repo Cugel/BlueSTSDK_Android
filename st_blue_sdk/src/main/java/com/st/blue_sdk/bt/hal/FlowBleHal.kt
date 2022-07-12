@@ -615,7 +615,7 @@ class FlowBleHal(
             return ConnectionStatus(prevState, newState)
         }
 
-        return ConnectionStatus(node.connectionStatus.prev, node.connectionStatus.current)
+       return ConnectionStatus(node.connectionStatus.prev, node.connectionStatus.current)
     }
 
     private suspend fun enableBLEServiceChangedIndications(): Boolean {

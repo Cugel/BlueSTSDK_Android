@@ -53,7 +53,7 @@ object P2PConfiguration {
 
         if (protocolVersion.toInt() == PROTOCOL_V2) {
             boardFirmware?.let {
-                return it.fota == BoardFotaType.WB_MODE
+                return it.fota.type == BoardFotaType.WB_MODE
             }
         }
 

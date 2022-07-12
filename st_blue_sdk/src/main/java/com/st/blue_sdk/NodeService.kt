@@ -59,14 +59,19 @@ class NodeService(
 
     @SuppressLint("MissingPermission")
     fun connectToNode(autoConnect: Boolean = false): Flow<Node> {
-
         deviceStatusJob?.cancel()
         deviceStatusJob = bleHal.getDeviceStatus().onEach {
+            Log.d("connectToNode", it.connectionStatus.prev.name + "->" + it.connectionStatus.current.name)
             when (it.connectionStatus.current) {
                 NodeState.ServicesDiscovered -> discoverFeatures()
                 NodeState.Ready -> {
                     debugService.init()
                     configControlService.init()
+                    //Set the Max possible MTU for WB (251) / BlueNRG-2 (220) / BlueNRG-1 (158)
+                    //maxPayloadSize = MTU-3
+                    //val payloadSize = bleHal.requestPayloadSize(maxPayloadSize = 248)
+                    //Log.d(TAG, "max Payload (mtu)size is: $payloadSize")
+                    bleHal.requestPayloadSize(maxPayloadSize = 248)
                 }
                 else -> Unit
             }

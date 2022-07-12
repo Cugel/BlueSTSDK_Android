@@ -15,8 +15,8 @@ import kotlinx.serialization.json.Json
 
 class OptionByteDataConverter {
     @TypeConverter
-    fun fromOptionByte(value: List<OptionByte>?): String {
-        if (value == null) return ""
+    fun fromOptionByte(value: List<OptionByte>): String {
+        if (value.isEmpty()) return ""
         return Json.encodeToString(value)
     }
 

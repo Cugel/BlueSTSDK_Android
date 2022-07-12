@@ -433,7 +433,7 @@ class CharacteristicFwUpgrade(
             node.advertiseInfo.getFwInfo()?.let {
                 val boardFirmware = catalogRepository.getFwDetailsNode(it.deviceId, it.fwId)
                 if (boardFirmware != null) {
-                    return boardFirmware.fota == BoardFotaType.WB_READY
+                    return boardFirmware.fota.type == BoardFotaType.WB_READY
                 }
             }
         }
