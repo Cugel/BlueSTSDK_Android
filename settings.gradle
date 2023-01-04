@@ -20,6 +20,7 @@ dependencyResolutionManagement {
         mavenCentral()
         mavenLocal()
 
+/*        
         maven {
             name = "github"
             url = uri("https://maven.pkg.github.com/SW-Platforms/BlueSTSDK_Android")
@@ -28,6 +29,7 @@ dependencyResolutionManagement {
                 password = System.getenv("GPR_API_KEY") ?: settings.GPR_API_KEY
             }
         }
+*/
     }
 }
 rootProject.name = "STBleSDK"

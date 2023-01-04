@@ -62,7 +62,10 @@ object Boards {
         WB_BOARD,
 
         /** boards based on a x NUCLEO board  */
-        NUCLEO, NUCLEO_F401RE, NUCLEO_L476RG, NUCLEO_L053R8, NUCLEO_F446RE
+        NUCLEO, NUCLEO_F401RE, NUCLEO_L476RG, NUCLEO_L053R8, NUCLEO_F446RE,
+        
+        /** Artaino */
+        ARTAINO
     } //Type
 
     fun getModelFromIdentifier(id: Int): Model {
@@ -88,6 +91,7 @@ object Boards {
             0x7E -> Model.NUCLEO_L476RG
             0x7D -> Model.NUCLEO_L053R8
             0x7C -> Model.NUCLEO_F446RE
+            0xaa -> Model.ARTAINO
             else -> if (temp in 0x81..0x8A) Model.WB_BOARD else Model.GENERIC
         }
     }

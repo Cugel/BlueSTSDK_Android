@@ -554,6 +554,16 @@ class FlowBleHal(
                                 node.copy(rssi = RssiData(event.rssi, Date()))
                             }
                         }
+                        // 2022-09-10 SH: added to avoid compile problem
+                        is BleEvent.CharacteristicRead -> {
+                            Log.d(TAG, "BleEvent.CharacteristicRead")
+                        }
+                        is BleEvent.CharacteristicWrite -> {
+                            Log.d(TAG, "BleEvent.CharacteristicWrite")
+                        }
+                        is BleEvent.DescriptorWrite -> {
+                            Log.d(TAG, "BleEvent.DescriptorWrite")
+                        }
                     }
                 }
             }

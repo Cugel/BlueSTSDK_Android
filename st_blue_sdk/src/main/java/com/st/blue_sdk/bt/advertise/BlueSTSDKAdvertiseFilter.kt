@@ -7,9 +7,12 @@
  */
 package com.st.blue_sdk.bt.advertise
 
+import android.util.Log
 import android.util.SparseArray
 import com.st.blue_sdk.models.Boards
 import com.st.blue_sdk.utils.NumberConversion
+
+private const val TAG = "BSTSDKAF"
 
 class BlueSTSDKAdvertiseFilter : AdvertiseFilter {
 
@@ -47,7 +50,12 @@ class BlueSTSDKAdvertiseFilter : AdvertiseFilter {
             }
 
             val protocolVersion: Short = NumberConversion.byteToUInt8(it, offset)
-            if (protocolVersion < VERSION_PROTOCOL_SUPPORTED_MIN || protocolVersion > VERSION_PROTOCOL_SUPPORTED_MAX) {
+            
+            if (protocolVersion < 0xee) {
+                if (protocolVersion < VERSION_PROTOCOL_SUPPORTED_MIN || protocolVersion > VERSION_PROTOCOL_SUPPORTED_MAX) {
+                    return null
+                }
+            } else if (protocolVersion > 0xee) {
                 return null
             }
 
@@ -56,6 +64,7 @@ class BlueSTSDKAdvertiseFilter : AdvertiseFilter {
                 else it[1 + offset].toInt() and 0x1F
 
             val model: Boards.Model = Boards.getModelFromIdentifier(deviceId)
+
             val isSleeping = getNodeSleepingState(it[1 + offset])
             val hasGeneralPurpose = getHasGenericPurposeFeature(it[1 + offset])
             val featureMap = NumberConversion.BigEndian.bytesToUInt32(it, 2 + offset)
@@ -67,6 +76,8 @@ class BlueSTSDKAdvertiseFilter : AdvertiseFilter {
                     it[9 + offset], it[10 + offset], it[11 + offset]
                 )
             } else null
+
+            Log.d(TAG, "Model:" + model + " is: "+ isSleeping + " gp: " + hasGeneralPurpose + " Feature map: " + featureMap.toString() + " Address: "+ address)
 
             return BlueStSdkAdvertiseInfo(
                 name,

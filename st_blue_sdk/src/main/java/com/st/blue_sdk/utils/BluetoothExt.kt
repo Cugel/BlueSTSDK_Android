@@ -9,6 +9,7 @@ package com.st.blue_sdk.utils
 
 import android.bluetooth.BluetoothGattCharacteristic
 import android.bluetooth.BluetoothGattDescriptor
+import android.util.Log
 import com.st.blue_sdk.features.Feature
 import com.st.blue_sdk.models.Boards
 import java.util.*
@@ -23,7 +24,8 @@ fun BluetoothGattCharacteristic.isExtendedOrExternalFeatureCharacteristics() =
     uuid.toString().endsWith(Feature.Type.EXTENDED.suffix) ||
             uuid.toString().endsWith(Feature.Type.EXTERNAL_STM32.suffix) ||
             uuid.toString().endsWith(Feature.Type.EXTERNAL_BLUE_NRG_OTA.suffix) ||
-            uuid.toString().endsWith(Feature.Type.EXTERNAL_STD_CHART.suffix)
+            uuid.toString().endsWith(Feature.Type.EXTERNAL_STD_CHART.suffix) ||
+            uuid.toString().endsWith(Feature.Type.EXTERNAL_ARTAINO.suffix)
 
 private const val SHR_MASK = 32
 
@@ -54,6 +56,8 @@ fun BluetoothGattCharacteristic.buildFeatures(
 ): List<Feature<*>> {
     val featureMask = (uuid.mostSignificantBits shr SHR_MASK).toInt()
     val features = mutableListOf<Feature<*>>()
+    
+    Log.d("BluetoothExt", "buildFeatures - boardModel: " + boardModel +" mask: " + featureMask);
 
     var mask = 1L shl 31
     for (i in 0..31) {

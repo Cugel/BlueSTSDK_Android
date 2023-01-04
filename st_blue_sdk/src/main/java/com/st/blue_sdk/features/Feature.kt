@@ -7,6 +7,7 @@
  */
 package com.st.blue_sdk.features
 
+import android.util.Log
 import com.st.blue_sdk.features.Feature.Type.*
 import com.st.blue_sdk.features.acceleration.Acceleration
 import com.st.blue_sdk.features.acceleration_event.AccelerationEvent
@@ -82,6 +83,10 @@ import com.st.blue_sdk.features.temperature.Temperature
 import com.st.blue_sdk.logger.Loggable
 import com.st.blue_sdk.models.Boards
 import com.st.blue_sdk.utils.NumberConversion
+
+import com.st.blue_sdk.features.rx.RxFeature
+import com.st.blue_sdk.features.tx.TxFeature
+
 import java.util.*
 
 abstract class Feature<T>(
@@ -97,6 +102,7 @@ abstract class Feature<T>(
         STANDARD(suffix = "-0001-11e1-ac36-0002a5d5c51b"),
         EXTENDED(suffix = "-0002-11e1-ac36-0002a5d5c51b"),
         GENERAL_PURPOSE(suffix = "0000-0003-11e1-ac36-0002a5d5c51b"),
+        EXTERNAL_ARTAINO(suffix = "-b5a3-f393-e0a9-e50e24dcca9e"),        
         EXTERNAL_BLUE_NRG_OTA(suffix = "-8508-11e3-baa7-0800200c9a66"),
         EXTERNAL_STM32(suffix = "-8e22-4541-9d4c-21edae82ed19"),
         EXTERNAL_STD_CHART(suffix = "0x2A05-0000-1000-8000-00805f9b34fb");
@@ -151,13 +157,17 @@ abstract class Feature<T>(
         }
 
     companion object {
+        val TAG = Feature::class.simpleName
 
         fun createFeature(
             boardModel: Boards.Model? = null,
             identifier: Int,
             type: Type,
             isEnabled: Boolean = true
-        ): Feature<*> = when (type) {
+        ): Feature<*> {
+            Log.d(TAG, "create Feature, boardModel: " + boardModel + " identifier: " + identifier + " type: " + type)
+            
+            return when (type) {
             STANDARD -> when (boardModel) {
                 Boards.Model.WB_BOARD ->
                     when (identifier) {
@@ -407,6 +417,19 @@ abstract class Feature<T>(
                 )
                 else -> throw UnsupportedOperationException("$type unknown")
             }
+            EXTERNAL_ARTAINO -> when (identifier) {
+                Integer.decode("0x6e400002") -> RxFeature(
+                    isEnabled = isEnabled,
+                    identifier = identifier,
+                    type = type
+                )
+                Integer.decode("0x6e400003") -> TxFeature(
+                    isEnabled = isEnabled,
+                    identifier = identifier,
+                    type = type
+                )
+                else -> throw UnsupportedOperationException("$type unknown")
+            }
             EXTERNAL_STD_CHART -> HeartRate(
                 isEnabled = isEnabled,
                 identifier = identifier,
@@ -414,4 +437,5 @@ abstract class Feature<T>(
             )
         }
     }
+}
 }

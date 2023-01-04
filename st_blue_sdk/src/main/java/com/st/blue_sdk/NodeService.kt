@@ -180,10 +180,15 @@ class NodeService(
         characteristicWithFeatures.clear()
         val boardModel: Boards.Model =
             Boards.getModelFromIdentifier(advertiseInfo.getDeviceId().toInt())
+        
+        Log.d(TAG, "Board model " + boardModel + ", number of discovered services: " + bleHal.getDiscoveredServices().size)
 
         bleHal.getDiscoveredServices().map { service ->
             service.characteristics.forEach { characteristic ->
+                Log.d(TAG, "Characteristic  " + characteristic.uuid.toString())
+                
                 if (characteristic.isExtendedOrExternalFeatureCharacteristics()) {
+                    Log.d(TAG, "extended characteristic " + characteristic.uuid.toString())
                     runCatching {
                         characteristicWithFeatures.add(
                             CharacteristicWithFeatures(
@@ -195,6 +200,7 @@ class NodeService(
                 }
 
                 if (characteristic.isGeneralPurposeFeatureCharacteristics()) {
+                    Log.d(TAG, "general purpose characteristic " + characteristic.uuid.toString())
                     runCatching {
                         characteristicWithFeatures.add(
                             CharacteristicWithFeatures(
@@ -207,6 +213,7 @@ class NodeService(
 
                 if (characteristic.isStandardFeatureCharacteristics()) {
                     runCatching {
+                        Log.d(TAG, "standard characteristic " + characteristic.uuid.toString())
                         characteristicWithFeatures.add(
                             CharacteristicWithFeatures(
                                 characteristic = characteristic,
