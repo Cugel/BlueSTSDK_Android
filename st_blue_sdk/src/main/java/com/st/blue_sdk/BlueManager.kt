@@ -81,4 +81,8 @@ interface BlueManager {
     suspend fun upgradeFw(nodeId: String): FwConsole?
 
     fun getFwUpdateStrategy(nodeId: String): UpgradeStrategy
+    
+    // BIDT Extension
+    suspend fun write(nodeId: String, data: ByteArray) : Int
+    fun read(nodeId: String) : Flow<ByteArray>
 }

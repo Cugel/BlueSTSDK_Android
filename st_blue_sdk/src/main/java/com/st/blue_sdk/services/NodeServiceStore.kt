@@ -15,6 +15,8 @@ import com.st.blue_sdk.bt.advertise.BleAdvertiseInfo
 import com.st.blue_sdk.bt.hal.FlowBleHal
 import com.st.blue_sdk.logger.Logger
 import com.st.blue_sdk.models.NodeState
+import com.st.blue_sdk.services.bidt.BIDTService
+import com.st.blue_sdk.services.bidt.BIDTServiceImpl
 import com.st.blue_sdk.services.config.ConfigControlServiceImpl
 import com.st.blue_sdk.services.debug.DebugServiceImpl
 import dagger.hilt.android.qualifiers.ApplicationContext
@@ -62,12 +64,15 @@ class NodeServiceStore @Inject constructor(
         val debugService = DebugServiceImpl(bleHAL)
         val configControlService = ConfigControlServiceImpl(bleHAL)
 
+        val bidtService = BIDTServiceImpl(bleHAL)
+        
         val nodeService = NodeService(
             coroutineScope = coroutineScope,
             advertiseInfo = advertiseInfo,
             bleHal = bleHAL,
             debugService = debugService,
             configControlService = configControlService,
+            bidtService = bidtService,
             loggers = loggers.toMutableSet()
         )
 

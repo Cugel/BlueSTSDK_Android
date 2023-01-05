@@ -18,6 +18,7 @@ import com.st.blue_sdk.logger.Logger
 import com.st.blue_sdk.models.Boards
 import com.st.blue_sdk.models.Node
 import com.st.blue_sdk.models.NodeState
+import com.st.blue_sdk.services.bidt.BIDTService
 import com.st.blue_sdk.services.config.ConfigControlService
 import com.st.blue_sdk.services.debug.DebugMessage
 import com.st.blue_sdk.services.debug.DebugService
@@ -32,6 +33,7 @@ class NodeService(
     val bleHal: BleHal,
     private val unwrapTimestamp: UnwrapTimestamp = UnwrapTimestamp(),
     val debugService: DebugService,
+    val bidtService: BIDTService,
     private val configControlService: ConfigControlService,
     private val loggers: MutableSet<Logger>
 ) {
@@ -51,6 +53,12 @@ class NodeService(
             UUID.fromString("00000001-000F-11e1-ac36-0002a5d5c51b")
         val FEATURE_CONFIGURATION_RW_CHARACTERISTIC_UID: UUID =
             UUID.fromString("00000002-000F-11e1-ac36-0002a5d5c51b")
+
+        val BIDT_SERVICE_UUID: UUID = UUID.fromString("6e400001-b5a3-f393-e0a9-e50e24dcca9e")
+        val BIDT_RX_CHARACTERISTIC_UUID: UUID =
+            UUID.fromString("6e400002-b5a3-f393-e0a9-e50e24dcca9e")
+        val BIDT_TX_CHARACTERISTIC_UUID: UUID =
+            UUID.fromString("6e400003-b5a3-f393-e0a9-e50e24dcca9e")
     }
 
     private val characteristicWithFeatures = mutableListOf<CharacteristicWithFeatures>()
@@ -72,6 +80,7 @@ class NodeService(
                     //val payloadSize = bleHal.requestPayloadSize(maxPayloadSize = 248)
                     //Log.d(TAG, "max Payload (mtu)size is: $payloadSize")
                     bleHal.requestPayloadSize(maxPayloadSize = 248)
+                    bidtService.init()
                 }
                 else -> Unit
             }
@@ -113,6 +122,12 @@ class NodeService(
 
     fun getDebugMessages(): Flow<DebugMessage> = debugService.getDebugMessages()
 
+    suspend fun writeData(data: ByteArray): Int {
+        return bidtService.write(data);
+    }
+    
+    fun getReadData(): Flow<ByteArray> = bidtService.getReadData()
+    
     suspend fun setFeaturesNotifications(
         features: List<Feature<*>>,
         enabled: Boolean
@@ -185,7 +200,7 @@ class NodeService(
 
         bleHal.getDiscoveredServices().map { service ->
             service.characteristics.forEach { characteristic ->
-                Log.d(TAG, "Characteristic  " + characteristic.uuid.toString())
+                Log.d(TAG, "Service " + service.uuid.toString() + ": Characteristic  " + characteristic.uuid.toString())
                 
                 if (characteristic.isExtendedOrExternalFeatureCharacteristics()) {
                     Log.d(TAG, "extended characteristic " + characteristic.uuid.toString())

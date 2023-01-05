@@ -410,4 +410,17 @@ class BlueManagerImpl @Inject constructor(
 
         return false
     }
+
+    override suspend fun write(nodeId: String, data: ByteArray) : Int {
+        val service = nodeServiceConsumer.getNodeService(nodeId)
+            ?: throw IllegalStateException("Unable to find NodeService for $nodeId")
+
+        return service.writeData(data)
+    }
+
+    override fun read(nodeId: String) : Flow<ByteArray> {
+        val service = nodeServiceConsumer.getNodeService(nodeId)
+            ?: throw IllegalStateException("Unable to find NodeService for $nodeId")
+        return service.getReadData()
+    }
 }
