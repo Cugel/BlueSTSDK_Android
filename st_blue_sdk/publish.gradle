@@ -14,7 +14,8 @@ def LIB_VERSION = '0.5.0-alpha14'
 
 task sourceJar(type: Jar) {
     from android.sourceSets.main.java.srcDirs
-    classifier "sources"
+    //classifier "sources"
+    archiveClassifier.set("sources")
 }
 afterEvaluate {
     publishing {

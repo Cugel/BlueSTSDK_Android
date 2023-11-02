@@ -47,6 +47,8 @@ android {
     kotlinOptions {
         jvmTarget = '1.8'
     }
+
+    namespace 'com.st.BlueSTSDK.Features.Audio.Opus'
 }
 
 dependencies {
